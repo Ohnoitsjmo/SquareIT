@@ -15,7 +15,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
+  if (req.body.number === undefined) {
+    return next();
+  }
   const num = parseFloat(req.body.number);
+  if (isNaN(num)) {
+    var err = new Error(`${req.body.number} is not a number`);
+    return next(err);
+  }
   const result = Math.pow(num, 2);
   req.doubled = result;
   next();
